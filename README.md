@@ -128,14 +128,13 @@ npm run dev -- --host
 
 本项目为纯静态单页 Web 应用（SPA），构建产物无任何后端服务器依赖，可零成本部署在各大全球 CDN 静态托管平台：
 
-### 部署到 Vercel（推荐）
-1. 将本仓库 Fork 到你的个人 GitHub 账号；
-2. 登录 [Vercel](https://vercel.com/)，点击 **Add New Project** 并关联该仓库；
-3. 构建参数保持默认：
-   - **Framework Preset**: `Vite`
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-4. 点击 **Deploy**，约 1 分钟即可在全球 CDN 上线！
+### 部署到 Vercel（推荐 · 点击即部署）
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fforsakens0ul%2Fgithubreader)
+
+1. 点击上方 **「Deploy with Vercel」** 按钮（或登录 [Vercel Dashboard](https://vercel.com/new) 直接导入你的 `forsakens0ul/githubreader` 仓库）；
+2. 项目已内置标准 [vercel.json](file:///d:/1/antigravity/gitreader/vercel.json)，所有构建配置与 SPA 路由均已自动配置完毕；
+3. 点击 **Deploy**，约 30 秒即可获得专属全球可访问的线上域名（如 `githubreader.vercel.app`）！
 
 ### 部署到 Cloudflare Pages
 1. 登录 Cloudflare Dashboard，选择 **Workers & Pages** -> **Create application** -> **Pages**；
