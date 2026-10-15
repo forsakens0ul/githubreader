@@ -159,14 +159,14 @@ export const BookshelfView: React.FC<BookshelfViewProps> = ({ onOpenBook }) => {
             <div className="p-6 bg-white dark:bg-zinc-900 rounded-3xl border border-amber-200/80 dark:border-zinc-800 shadow-xl max-w-md w-full space-y-4">
               <div className="flex items-center space-x-2 text-xs font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">
                 <Sparkles className="w-4 h-4 text-amber-600" />
-                <span>一键试读官方范例</span>
+                <span>一键试读官方指南</span>
               </div>
               <div className="text-left space-y-1">
                 <h4 className="font-serif font-bold text-base text-gray-900 dark:text-zinc-100">
-                  《托卡马克之冠》知乎回答合集
+                  《GitHub Reader 官方手册》
                 </h4>
                 <p className="text-xs text-gray-500 dark:text-zinc-400">
-                  包含 2020 ~ 2025 年知乎深度回答整理，已自动排除冗余脚本与巨型单文件。
+                  包含快速上手、排版引擎、本地物理存储同步与自建部署说明，秒级极速解析体验。
                 </p>
               </div>
 

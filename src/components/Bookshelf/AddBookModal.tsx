@@ -70,9 +70,9 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose, onB
     }
   };
 
-  const handleQuickTokamak = () => {
-    setUrlInput('https://github.com/i12cu2/Crown_of_Tokamak');
-    handleImport('https://github.com/i12cu2/Crown_of_Tokamak');
+  const handleQuickDemo = () => {
+    setUrlInput('https://github.com/forsakens0ul/githubreader');
+    handleImport('https://github.com/forsakens0ul/githubreader');
   };
 
   return (
@@ -97,7 +97,7 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose, onB
               添加公开文本仓库为电子书
             </h2>
             <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
-              自动识别 Markdown 与 TXT 文件、章节序号及年份归类，即刻转化为沉浸式电子书。
+              自动识别 Markdown 与 TXT 文件、章节序号及目录结构，即刻转化为沉浸式电子书。
             </p>
           </div>
 
@@ -105,14 +105,14 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose, onB
           <div className="p-3 bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-900/40 rounded-2xl flex items-center justify-between">
             <div className="space-y-0.5">
               <p className="text-xs font-bold text-amber-900 dark:text-amber-200">
-                推荐测试书目：《托卡马克之冠》
+                推荐体验书目：《GitHub Reader 官方手册》
               </p>
               <p className="text-[11px] text-amber-700/80 dark:text-amber-400">
-                i12cu2/Crown_of_Tokamak · 1800+ 篇回答整理
+                forsakens0ul/githubreader · 极速体验 Markdown 与 TXT 智能解析排版
               </p>
             </div>
             <button
-              onClick={handleQuickTokamak}
+              onClick={handleQuickDemo}
               disabled={!!loadingStep}
               className="shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white transition-colors shadow-xs"
             >

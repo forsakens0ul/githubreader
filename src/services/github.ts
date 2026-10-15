@@ -52,7 +52,7 @@ export function parseGitHubUrl(input: string): GitHubRepoRef {
   // Remove leading/trailing slashes
   const parts = pathname.replace(/^\/+|\/+$/g, '').split('/');
   if (parts.length < 2) {
-    throw new Error('GitHub 地址格式需包含 owner 和 repo，例如: i12cu2/Crown_of_Tokamak');
+    throw new Error('GitHub 地址格式需包含 owner 和 repo，例如: forsakens0ul/githubreader');
   }
 
   const owner = parts[0];
