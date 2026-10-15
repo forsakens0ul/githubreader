@@ -1,0 +1,21 @@
+{
+  "name": "GitBook Reader - 把 GitHub 仓库变成电子书",
+  "short_name": "GitReader",
+  "description": "专为阅读设计的 GitHub 文本仓库电子书阅读器，支持目录解析、分页、搜索与进度记忆",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f1e3",
+  "theme_color": "#b45309",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/vite.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

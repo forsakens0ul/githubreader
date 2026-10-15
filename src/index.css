@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
+
+    /* Reading themes */
+    --reading-bg: 0 0% 100%;
+    --reading-text: 0 0% 3.9%;
+    --reading-accent: 45 100% 96%;
+    --reading-selection: 45 100% 85%;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+
+    /* Dark reading themes */
+    --reading-bg: 0 0% 7%;
+    --reading-text: 0 0% 90%;
+    --reading-accent: 0 0% 14.9%;
+    --reading-selection: 0 0% 20%;
+  }
+
+  /* Reading themes from Coreader */
+  .theme-sepia {
+    --reading-bg: 45 30% 94%;
+    --reading-text: 25 20% 15%;
+    --reading-accent: 45 25% 88%;
+    --reading-selection: 45 40% 80%;
+  }
+
+  .theme-paper {
+    --reading-bg: 35 15% 96%;
+    --reading-text: 20 15% 10%;
+    --reading-accent: 35 10% 90%;
+    --reading-selection: 35 25% 85%;
+  }
+
+  .theme-green {
+    --reading-bg: 120 30% 96%;
+    --reading-text: 120 20% 15%;
+    --reading-accent: 120 20% 88%;
+    --reading-selection: 120 30% 80%;
+  }
+}
+
+@layer components {
+  .reading-container {
+    background-color: hsl(var(--reading-bg));
+    color: hsl(var(--reading-text));
+  }
+
+  .reading-selection {
+    background-color: hsl(var(--reading-selection));
+  }
+
+  .highlight-yellow {
+    background-color: rgba(255, 235, 59, 0.3);
+    border-bottom: 2px solid rgba(255, 235, 59, 0.8);
+  }
+
+  .highlight-blue {
+    background-color: rgba(33, 150, 243, 0.3);
+    border-bottom: 2px solid rgba(33, 150, 243, 0.8);
+  }
+
+  .highlight-green {
+    background-color: rgba(76, 175, 80, 0.3);
+    border-bottom: 2px solid rgba(76, 175, 80, 0.8);
+  }
+
+  .highlight-red {
+    background-color: rgba(244, 67, 54, 0.3);
+    border-bottom: 2px solid rgba(244, 67, 54, 0.8);
+  }
+
+  .underline-wave {
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: currentColor;
+    text-underline-offset: 4px;
+  }
+
+  .font-reading {
+    font-family: -apple-system-ui-serif, ui-serif, "Source Han Serif SC", "Noto Serif SC", SimSun, "Songti SC", Georgia, serif;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+  }
+
+  .font-reading-serif {
+    font-family: "Source Han Serif SC", "Noto Serif SC", SimSun, "Songti SC", Georgia, serif;
+    line-height: 1.6;
+  }
+
+  .font-reading-sans {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.6;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(150, 150, 150, 0.25);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(150, 150, 150, 0.45);
+}
+
+::selection {
+  background: hsl(var(--reading-selection));
+  color: inherit;
+}
