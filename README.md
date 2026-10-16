@@ -16,7 +16,10 @@
 [![PWA Ready](https://img.shields.io/badge/PWA-Ready-purple.svg?style=flat-square)](https://web.dev/progressive-web-apps/)
 [![Deploy with Vercel](https://img.shields.io/badge/Deploy-Vercel-black.svg?style=flat-square&logo=vercel)](https://vercel.com/)
 
-[✨ 在线体验](#-快速上手体验) • [🌟 核心特性](#-核心特性) • [🏗️ 系统架构](#️-系统架构) • [💾 本地硬盘同步](#-本地物理存储与文件同步) • [🚀 自建部署](#-一键部署)
+[✨ 在线体验](https://githubook.vercel.app/) • [🌟 核心特性](#-核心特性) • [🏗️ 系统架构](#️-系统架构) • [💾 本地硬盘同步](#-本地物理存储与文件同步) • [🚀 自建部署](#-一键部署)
+
+<img width="1764" height="1194" alt="image" src="https://github.com/user-attachments/assets/ceabe50a-ae83-421e-8354-7e7cf22aa296" />
+<img width="1530" height="1253" alt="image" src="https://github.com/user-attachments/assets/3ee0175f-fac2-4ae9-bb76-eed0d61b458d" />
 
 </div>
 
