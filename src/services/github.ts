@@ -1,6 +1,7 @@
 import type { FileTreeItem, GitHubRepoRef, MirrorSource } from '../types';
 import { db } from '../db';
 import { decodeTextBuffer } from '../lib/book-parser';
+import { parseDocumentBuffer } from './documentParser';
 
 export class GitHubApiError extends Error {
   status?: number;
@@ -255,7 +256,7 @@ export async function fetchFileContent(
 
       if (res.ok) {
         const buffer = await res.arrayBuffer();
-        const text = decodeTextBuffer(buffer);
+        const text = await parseDocumentBuffer(buffer, filePath);
         // Cache to IndexedDB asynchronously
         db.cachedFiles.put({
           key: cacheKey,
@@ -283,7 +284,8 @@ export async function fetchFileContent(
     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}?ref=${branch}`;
     const apiRes = await fetch(apiUrl, { headers: apiHeaders });
     if (apiRes.ok) {
-      const text = await apiRes.text();
+      const apiBuffer = await apiRes.arrayBuffer();
+      const text = await parseDocumentBuffer(apiBuffer, filePath);
       db.cachedFiles.put({
         key: cacheKey,
         content: text,

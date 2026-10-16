@@ -97,7 +97,7 @@ export const AddBookModal: React.FC<AddBookModalProps> = ({ isOpen, onClose, onB
               添加公开文本仓库为电子书
             </h2>
             <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
-              自动识别 Markdown 与 TXT 文件、章节序号及目录结构，即刻转化为沉浸式电子书。
+              支持 TXT、Markdown、EPUB、Word (.docx) 与 PDF，自动过滤脚本并整理为沉浸式电子书。
             </p>
           </div>
 

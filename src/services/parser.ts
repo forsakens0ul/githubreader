@@ -1,6 +1,14 @@
 import type { BookMetadata, Chapter, FileTreeItem, Volume } from '../types';
 
-const READABLE_EXTENSIONS = new Set(['.txt', '.md', '.markdown', '.text']);
+export const READABLE_EXTENSIONS = new Set([
+  '.txt',
+  '.md',
+  '.markdown',
+  '.text',
+  '.docx',
+  '.epub',
+  '.pdf',
+]);
 
 /**
  * Checks if a file path is a readable book content file.
@@ -24,9 +32,9 @@ export function isReadmeFile(path: string): boolean {
 /**
  * Clean and format title for Crown of Tokamak and general files.
  */
-export function formatChapterTitle(fileName: string): { title: string; date?: string } {
+export function formatChapterTitle(fileName: string): { title: string; date?: string; format?: string } {
   // Strip extension
-  let base = fileName.replace(/\.(txt|md|markdown|text)$/i, '');
+  let base = fileName.replace(/\.(txt|md|markdown|text|docx|epub|pdf)$/i, '');
 
   // Tokamak format: 2020.04.21如何看待... or 2020-04-21...
   const dateMatch = base.match(/^(\d{4}[.-]\d{2}[.-]\d{2})[-_\s]*(.*)$/);
@@ -169,6 +177,7 @@ export function buildBookStructure(
     const chapters: Chapter[] = volData.files.map((file, fIdx) => {
       totalChapterCounter++;
       const fileName = file.path.split('/').pop() || '';
+      const ext = fileName.includes('.') ? fileName.split('.').pop()?.toLowerCase() : undefined;
       const { title, date } = formatChapterTitle(fileName);
 
       return {
@@ -178,6 +187,7 @@ export function buildBookStructure(
         volume: volData.name,
         date,
         order: fIdx + 1,
+        format: ext,
       };
     });
 

@@ -26,6 +26,7 @@ export interface Chapter {
   order: number;
   charOffset?: number;
   charLength?: number;
+  format?: string;
 }
 
 export interface Volume {

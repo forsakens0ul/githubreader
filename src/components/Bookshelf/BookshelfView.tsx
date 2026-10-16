@@ -151,7 +151,7 @@ export const BookshelfView: React.FC<BookshelfViewProps> = ({ onOpenBook }) => {
                 把 GitHub 仓库变成一本真正的书
               </h1>
               <p className="text-sm sm:text-base text-gray-600 dark:text-zinc-400 leading-relaxed max-w-lg mx-auto">
-                输入公开 GitHub 文本仓库，智能识别年份目录、回答标题与章节层次，享受纯净的电子书翻页排版。
+                输入公开 GitHub 文本仓库，智能识别 TXT、Markdown、EPUB、Word 与 PDF 文档，自动过滤代码脚本，享受纯净的电子书翻页排版。
               </p>
             </div>
 

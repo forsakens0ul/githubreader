@@ -331,6 +331,18 @@ export const TocDrawer: React.FC<TocDrawerProps> = ({
                                 {isSelected && (
                                   <BookOpen className="w-3.5 h-3.5 text-amber-200 shrink-0" />
                                 )}
+                                {ch.format && ['docx', 'epub', 'pdf'].includes(ch.format) && (
+                                  <span
+                                    className={cn(
+                                      'px-1 py-0.2 rounded text-[9px] uppercase font-mono font-bold shrink-0',
+                                      isSelected
+                                        ? 'bg-amber-700 text-amber-100'
+                                        : 'bg-muted text-muted-foreground'
+                                    )}
+                                  >
+                                    {ch.format}
+                                  </span>
+                                )}
                                 <span
                                   className={cn(
                                     'line-clamp-2 leading-relaxed text-xs',
