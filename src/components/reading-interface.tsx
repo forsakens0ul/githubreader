@@ -212,8 +212,14 @@ export function ReadingInterface({ book, onClose }: ReadingInterfaceProps) {
       const ch = book.chapters?.find((c: any) => c.id === chapterId || c.filePath === chapterId);
       if (!ch) return;
       setIsLoadingChapter(true);
+      const isLargeDoc = /\.(pdf|epub|docx)$/i.test(ch.filePath || ch.id);
+      let toastId: string | number | undefined;
+      if (isLargeDoc) {
+        toastId = toast.loading(`正在获取并解析 ${ch.title}，文件较大请稍候...`);
+      }
       try {
         const text = await fetchFileContent(book.owner, book.repo, book.branch || 'main', ch.filePath || ch.id);
+        if (toastId) toast.dismiss(toastId);
         readingEngine.updateContent(text);
         setCurrentChapterInfo({ id: ch.id, title: ch.title, filePath: ch.filePath || ch.id });
         setCurrentPage(0);
@@ -233,8 +239,10 @@ export function ReadingInterface({ book, onClose }: ReadingInterfaceProps) {
         db.books.update(book.id, { lastReadAt: Date.now() });
         toast.success(`已切换至: ${ch.title}`, { duration: 1500 });
       } catch (err: any) {
+        if (toastId) toast.dismiss(toastId);
         toast.error(`加载章节失败: ${err.message}`);
       } finally {
+        if (toastId) toast.dismiss(toastId);
         setIsLoadingChapter(false);
       }
       return;

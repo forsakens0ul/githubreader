@@ -52,7 +52,8 @@ export async function parseEpub(buffer: ArrayBuffer): Promise<string> {
     const containerXml = await containerFile.async('text');
     const parser = new DOMParser();
     const containerDoc = parser.parseFromString(containerXml, 'application/xml');
-    const rootfileNode = containerDoc.querySelector('rootfile');
+    const rootfiles = containerDoc.getElementsByTagName('rootfile');
+    const rootfileNode = rootfiles.length > 0 ? rootfiles[0] : null;
     const opfPath = rootfileNode?.getAttribute('full-path');
 
     if (!opfPath) {
@@ -69,22 +70,25 @@ export async function parseEpub(buffer: ArrayBuffer): Promise<string> {
     const opfDoc = parser.parseFromString(opfXml, 'application/xml');
 
     // 2. Parse metadata
-    const bookTitle = opfDoc.querySelector('title')?.textContent || '';
-    const bookAuthor = opfDoc.querySelector('creator')?.textContent || '';
+    const titles = opfDoc.getElementsByTagName('title');
+    const bookTitle = titles.length > 0 ? titles[0].textContent || '' : '';
+    const creators = opfDoc.getElementsByTagName('creator');
+    const bookAuthor = creators.length > 0 ? creators[0].textContent || '' : '';
 
     // 3. Build manifest item map (id -> href)
     const manifestItems = new Map<string, string>();
-    const itemNodes = opfDoc.querySelectorAll('manifest > item');
-    itemNodes.forEach((node) => {
+    const itemNodes = opfDoc.getElementsByTagName('item');
+    for (let i = 0; i < itemNodes.length; i++) {
+      const node = itemNodes[i];
       const id = node.getAttribute('id');
       const href = node.getAttribute('href');
       if (id && href) {
         manifestItems.set(id, href);
       }
-    });
+    }
 
     // 4. Follow spine order
-    const spineNodes = opfDoc.querySelectorAll('spine > itemref');
+    const spineNodes = opfDoc.getElementsByTagName('itemref');
     const chapterTexts: string[] = [];
 
     if (bookTitle) {
@@ -116,6 +120,24 @@ export async function parseEpub(buffer: ArrayBuffer): Promise<string> {
       }
     }
 
+    // Fallback: If spine extraction yielded nothing, scan all html/xhtml files in the zip
+    if (chapterTexts.length === 0) {
+      const htmlFiles = Object.keys(zip.files).filter(
+        (fn) => (fn.endsWith('.xhtml') || fn.endsWith('.html') || fn.endsWith('.htm')) && !fn.includes('toc')
+      );
+      htmlFiles.sort();
+      for (const fn of htmlFiles) {
+        const file = zip.file(fn);
+        if (file) {
+          const content = await file.async('text');
+          const text = convertHtmlToReadableText(content);
+          if (text.trim()) {
+            chapterTexts.push(text.trim());
+          }
+        }
+      }
+    }
+
     if (chapterTexts.length === 0) {
       throw new Error('未能从 EPUB 中提取到可读章节文本');
     }
@@ -140,8 +162,9 @@ export async function parsePdf(buffer: ArrayBuffer): Promise<string> {
 
     const pdf = await loadingTask.promise;
     const pageTexts: string[] = [];
+    const maxPages = Math.min(pdf.numPages, 300);
 
-    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+    for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
       const page = await pdf.getPage(pageNum);
       const textContent = await page.getTextContent();
 
@@ -166,7 +189,7 @@ export async function parsePdf(buffer: ArrayBuffer): Promise<string> {
     }
 
     if (pageTexts.length === 0) {
-      throw new Error('未能从 PDF 中提取到文本内容（可能是纯图片扫描件）');
+      return `### 影印扫描版 PDF 提示\n\n> ⚠️ 该 PDF 文档共 **${pdf.numPages}** 页，为纯图片扫描件（未包含可提取的文字图层）。\n> 纯前端文本排版引擎暂时无法将其转换为文字流，建议使用本地 PDF 阅读器直接查看原件。`;
     }
 
     return pageTexts.join('\n\n---\n\n');

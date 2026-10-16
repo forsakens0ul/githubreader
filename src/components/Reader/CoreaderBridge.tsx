@@ -91,8 +91,11 @@ export const CoreaderBridge: React.FC<CoreaderBridgeProps> = ({ book, onBackToSh
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center space-y-4">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 space-y-4">
         <LoadingSpinner label={`正在准备《${book.title}》阅读界面...`} size="lg" />
+        <p className="text-xs text-muted-foreground max-w-sm text-center">
+          若首次加载大型 EPUB 或 PDF 文件（数十兆字节），网络传输与排版解析需片刻时间，请耐心稍候...
+        </p>
       </div>
     );
   }

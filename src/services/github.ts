@@ -185,16 +185,19 @@ export function getRawFileUrls(
   repo: string,
   branch: string,
   filePath: string
-): { raw: string; jsdelivr: string; gitmirror: string } {
+): { raw: string; ghproxy: string; ghproxy2: string; jsdelivr: string } {
   const encodedPath = filePath
     .split('/')
     .map((seg) => encodeURIComponent(seg))
     .join('/');
 
+  const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodedPath}`;
+
   return {
-    raw: `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodedPath}`,
+    raw: rawUrl,
+    ghproxy: `https://ghproxy.net/${rawUrl}`,
+    ghproxy2: `https://gh-proxy.com/${rawUrl}`,
     jsdelivr: `https://cdn.jsdelivr.net/gh/${owner}/${repo}@${branch}/${encodedPath}`,
-    gitmirror: `https://raw.gitmirror.com/${owner}/${repo}/${branch}/${encodedPath}`,
   };
 }
 
@@ -226,19 +229,26 @@ export async function fetchFileContent(
     }
   }
 
+  const isLargeDoc = /\.(pdf|epub|docx)$/i.test(filePath);
+  const timeoutMs = isLargeDoc ? 180000 : 35000; // 3 minutes for large docs, 35s for text
+
   const urls = getRawFileUrls(owner, repo, branch, filePath);
   const mirrorOrder: string[] = [];
 
   const source = options.mirrorSource || 'auto';
   if (source === 'raw') {
-    mirrorOrder.push(urls.raw, urls.gitmirror, urls.jsdelivr);
+    mirrorOrder.push(urls.raw, urls.ghproxy, urls.ghproxy2);
   } else if (source === 'jsdelivr') {
-    mirrorOrder.push(urls.jsdelivr, urls.raw, urls.gitmirror);
-  } else if (source === 'gitmirror') {
-    mirrorOrder.push(urls.gitmirror, urls.raw, urls.jsdelivr);
+    if (!isLargeDoc) mirrorOrder.push(urls.jsdelivr);
+    mirrorOrder.push(urls.ghproxy, urls.ghproxy2, urls.raw);
   } else {
-    // auto: raw first, then gitmirror, then jsdelivr
-    mirrorOrder.push(urls.raw, urls.gitmirror, urls.jsdelivr);
+    // auto:
+    // Try fast CORS proxies that support > 20MB files first in China/general network,
+    // then direct raw, then jsDelivr (for files under 20MB)
+    mirrorOrder.push(urls.ghproxy, urls.ghproxy2, urls.raw);
+    if (!isLargeDoc) {
+      mirrorOrder.push(urls.jsdelivr);
+    }
   }
 
   let lastError: Error | null = null;
@@ -246,7 +256,7 @@ export async function fetchFileContent(
   for (const url of mirrorOrder) {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
       const res = await fetch(url, {
         signal: controller.signal,
@@ -266,16 +276,18 @@ export async function fetchFileContent(
         }).catch((err) => console.warn('Failed to cache file in DB:', err));
 
         return text;
+      } else {
+        lastError = new Error(`HTTP ${res.status}: ${res.statusText}`);
       }
     } catch (err) {
       lastError = err as Error;
     }
   }
 
-  // Fallback to GitHub API getContent if raw endpoints fail and token/headers are available
+  // Fallback to GitHub API getContent if raw endpoints fail
   try {
     const apiHeaders: Record<string, string> = {
-      Accept: 'application/vnd.github.v3.raw',
+      Accept: 'application/vnd.github.v3+json',
       'User-Agent': 'GitReader-App',
     };
     if (options.token) {
@@ -284,15 +296,22 @@ export async function fetchFileContent(
     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}?ref=${branch}`;
     const apiRes = await fetch(apiUrl, { headers: apiHeaders });
     if (apiRes.ok) {
-      const apiBuffer = await apiRes.arrayBuffer();
-      const text = await parseDocumentBuffer(apiBuffer, filePath);
-      db.cachedFiles.put({
-        key: cacheKey,
-        content: text,
-        size: text.length,
-        cachedAt: Date.now(),
-      }).catch(() => {});
-      return text;
+      const data = await apiRes.json().catch(() => null);
+      if (data && data.download_url) {
+        const proxyUrl = `https://ghproxy.net/${data.download_url}`;
+        const directRes = await fetch(proxyUrl);
+        if (directRes.ok) {
+          const apiBuffer = await directRes.arrayBuffer();
+          const text = await parseDocumentBuffer(apiBuffer, filePath);
+          db.cachedFiles.put({
+            key: cacheKey,
+            content: text,
+            size: text.length,
+            cachedAt: Date.now(),
+          }).catch(() => {});
+          return text;
+        }
+      }
     }
   } catch {
     // ignore
