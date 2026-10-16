@@ -14,9 +14,11 @@
 [![IndexedDB](https://img.shields.io/badge/Storage-IndexedDB_Dexie-10b981.svg?style=flat-square)](https://dexie.org/)
 [![File System API](https://img.shields.io/badge/Local_Sync-FileSystemAccess_API-f59e0b.svg?style=flat-square)](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API)
 [![PWA Ready](https://img.shields.io/badge/PWA-Ready-purple.svg?style=flat-square)](https://web.dev/progressive-web-apps/)
-[![Deploy with Vercel](https://img.shields.io/badge/Deploy-Vercel-black.svg?style=flat-square&logo=vercel)](https://vercel.com/)
+[![Deploy with Vercel](https://img.shields.io/badge/Deploy-Vercel-black.svg?style=flat-square&logo=vercel)](https://githubook.vercel.app/)
+[![Online Demo](https://img.shields.io/badge/Live_Demo-githubook.vercel.app-brightgreen.svg?style=flat-square)](https://githubook.vercel.app/)
+[![Custom Domain](https://img.shields.io/badge/Custom_Domain-githubook.forsakensoul.lol-blue.svg?style=flat-square)](https://githubook.forsakensoul.lol)
 
-[✨ 在线体验](https://githubook.vercel.app/) • [🌟 核心特性](#-核心特性) • [🏗️ 系统架构](#️-系统架构) • [💾 本地硬盘同步](#-本地物理存储与文件同步) • [🚀 自建部署](#-一键部署)
+[🌐 在线体验 (Vercel)](https://githubook.vercel.app/) • [🚀 自定义域名 (Mirror)](https://githubook.forsakensoul.lol) • [🌟 核心特性](#-核心特性) • [🏗️ 系统架构](#️-系统架构) • [💾 本地硬盘同步](#-本地物理存储与文件同步) • [🚀 自建部署](#-一键部署)
 
 <img width="1764" height="1194" alt="image" src="https://github.com/user-attachments/assets/ceabe50a-ae83-421e-8354-7e7cf22aa296" />
 <img width="1530" height="1253" alt="image" src="https://github.com/user-attachments/assets/3ee0175f-fac2-4ae9-bb76-eed0d61b458d" />
@@ -96,9 +98,14 @@ graph LR
 
 ---
 
-## 🚀 快速上手体验
+## 🚀 快速上手与在线体验
 
-### 1. 本地启动开发环境
+### 1. 🌐 在线免安装体验（即开即用）
+无需在本地配置环境，直接通过浏览器打开即可体验全功能阅读：
+- 🌟 **主站点（Vercel 官方托管）**：👉 **[https://githubook.vercel.app/](https://githubook.vercel.app/)**
+- 🚀 **专属独立域名**：👉 **[https://githubook.forsakensoul.lol](https://githubook.forsakensoul.lol)**
+
+### 2. 💻 本地启动开发环境
 
 ```bash
 # 克隆仓库
@@ -114,8 +121,8 @@ npm run dev -- --host
 
 启动完成后，在浏览器访问控制台输出的地址（通常为 `http://localhost:5173/`）。
 
-### 2. 体验范例
-打开应用首页后，点击 **「一键导入官方手册」**（`forsakens0ul/githubreader`），即可在 1 秒内体验多章节智能排版与全部阅读功能！
+### 3. 体验范例
+打开应用首页后，点击 **「一键试读官方指南」**（`forsakens0ul/githubreader`），即可在 1 秒内体验多章节智能排版与全部阅读功能！
 
 ---
 
@@ -141,7 +148,7 @@ npm run dev -- --host
 
 1. 点击上方 **「Deploy with Vercel」** 按钮（或登录 [Vercel Dashboard](https://vercel.com/new) 直接导入你的 `forsakens0ul/githubreader` 仓库）；
 2. 项目已内置标准 [vercel.json](file:///d:/1/antigravity/gitreader/vercel.json)，所有构建配置与 SPA 路由均已自动配置完毕；
-3. 点击 **Deploy**，约 30 秒即可获得专属全球可访问的线上域名（如 `githubreader.vercel.app`）！
+3. 点击 **Deploy**，约 30 秒即可上线并获得专属域名（如官方在线演示：[https://githubook.vercel.app/](https://githubook.vercel.app/) 与自定义域名 [https://githubook.forsakensoul.lol](https://githubook.forsakensoul.lol)）！
 
 ### 部署到 Cloudflare Pages
 1. 登录 Cloudflare Dashboard，选择 **Workers & Pages** -> **Create application** -> **Pages**；
