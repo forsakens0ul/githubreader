@@ -21,9 +21,20 @@ export class ReadingEngine {
   private fontSize = 18;
   private fontFamily = "Georgia, serif";
   private lineHeight = 1.5;
+  private activeChapterTitle: string = "";
+  private activeChapterId: string = "";
 
   constructor(book: ParsedBook) {
     this.book = book;
+    this.activeChapterTitle =
+      (book as any).currentChapterTitle ||
+      book.chapters?.[(book as any).activeChapterIndex || 0]?.title ||
+      book.title ||
+      "";
+    this.activeChapterId =
+      (book as any).currentChapterId ||
+      book.chapters?.[(book as any).activeChapterIndex || 0]?.id ||
+      "";
     this.pages = this.splitIntoPages(book.content);
   }
 
@@ -34,43 +45,36 @@ export class ReadingEngine {
 
   // 获取页面信息
   getPageInfo(pageIndex: number): PageInfo {
-    if (pageIndex < 0 || pageIndex >= this.pages.length) {
+    const total = Math.max(1, this.pages.length);
+    const validIdx = Math.max(0, Math.min(pageIndex, total - 1));
+
+    if (this.pages.length === 0) {
       return {
         content: "No content available",
-        chapterId: "unknown",
-        chapterTitle: "Unknown",
+        chapterId: this.activeChapterId || "unknown",
+        chapterTitle: this.activeChapterTitle || this.book.title || "Unknown",
         pageInChapter: 0,
-        totalPagesInChapter: 0,
-        globalPage: pageIndex,
-        totalPages: this.pages.length,
+        totalPagesInChapter: 1,
+        globalPage: 0,
+        totalPages: 1,
       };
     }
 
-    // 查找当前页面所在的章节
-    const chapter = this.book.chapters.find(
-      (ch) => pageIndex >= ch.startPage - 1 && pageIndex < ch.endPage
-    );
-
-    if (!chapter) {
-      return {
-        content: this.pages[pageIndex],
-        chapterId: "unknown",
-        chapterTitle: "Unknown",
-        pageInChapter: 0,
-        totalPagesInChapter: 0,
-        globalPage: pageIndex,
-        totalPages: this.pages.length,
-      };
-    }
+    const title =
+      this.activeChapterTitle ||
+      this.book.chapters?.[(this.book as any).activeChapterIndex || 0]?.title ||
+      this.book.title ||
+      "正文";
+    const id = this.activeChapterId || "chapter-1";
 
     return {
-      content: this.pages[pageIndex],
-      chapterId: chapter.id,
-      chapterTitle: chapter.title,
-      pageInChapter: pageIndex - (chapter.startPage - 1),
-      totalPagesInChapter: chapter.endPage - chapter.startPage + 1,
-      globalPage: pageIndex,
-      totalPages: this.pages.length,
+      content: this.pages[validIdx],
+      chapterId: id,
+      chapterTitle: title,
+      pageInChapter: validIdx,
+      totalPagesInChapter: total,
+      globalPage: validIdx,
+      totalPages: total,
     };
   }
 
@@ -83,10 +87,22 @@ export class ReadingEngine {
     this.pages = this.splitIntoPages(this.book.content, options);
   }
 
+  // 设置当前活动章节
+  setActiveChapter(title: string, id: string): void {
+    this.activeChapterTitle = title;
+    this.activeChapterId = id;
+  }
+
   // 更新内容
-  updateContent(content: string): void {
+  updateContent(content: string, chapterTitle?: string, chapterId?: string): void {
     if (content && content.trim() !== "") {
       this.book.content = content;
+      if (chapterTitle) {
+        this.activeChapterTitle = chapterTitle;
+      }
+      if (chapterId) {
+        this.activeChapterId = chapterId;
+      }
       // 重新分页
       this.pages = this.splitIntoPages(content);
       console.log(`内容已更新，新页数: ${this.pages.length}`);

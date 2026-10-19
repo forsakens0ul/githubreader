@@ -51,10 +51,16 @@ export function ReadingInterface({ book, onClose }: ReadingInterfaceProps) {
     id: string;
     title: string;
     filePath: string;
+    date?: string;
   } | null>(() => {
     const initCh = book.chapters?.[book.activeChapterIndex || 0];
     return initCh
-      ? { id: initCh.id, title: initCh.title, filePath: initCh.filePath || initCh.id }
+      ? {
+          id: initCh.id,
+          title: book.currentChapterTitle || initCh.title,
+          filePath: book.currentChapterId || initCh.filePath || initCh.id,
+          date: book.currentChapterDate || initCh.date,
+        }
       : null;
   });
 
@@ -220,8 +226,13 @@ export function ReadingInterface({ book, onClose }: ReadingInterfaceProps) {
       try {
         const text = await fetchFileContent(book.owner, book.repo, book.branch || 'main', ch.filePath || ch.id);
         if (toastId) toast.dismiss(toastId);
-        readingEngine.updateContent(text);
-        setCurrentChapterInfo({ id: ch.id, title: ch.title, filePath: ch.filePath || ch.id });
+        readingEngine.updateContent(text, ch.title, ch.filePath || ch.id);
+        setCurrentChapterInfo({
+          id: ch.id,
+          title: ch.title,
+          filePath: ch.filePath || ch.id,
+          date: ch.date,
+        });
         setCurrentPage(0);
         setPageInfo(readingEngine.getPageInfo(0));
 
@@ -627,7 +638,7 @@ export function ReadingInterface({ book, onClose }: ReadingInterfaceProps) {
         >
           <AnimatePresence mode="wait">
             <motion.div
-              key={pageInfo.globalPage}
+              key={`${currentChapterInfo?.id || currentChapterInfo?.filePath || "ch"}_${pageInfo.globalPage}`}
               initial={{
                 opacity: 0,
                 x: settings.pageTransition === "slide" ? 40 : 0,
@@ -644,12 +655,24 @@ export function ReadingInterface({ book, onClose }: ReadingInterfaceProps) {
             >
               <div className="mb-6 pb-3 border-b border-border/40">
                 <h2 className="text-lg sm:text-xl font-bold font-serif mb-1 leading-snug">
-                  {pageInfo.chapterTitle}
+                  {currentChapterInfo?.title || pageInfo.chapterTitle}
                 </h2>
-                <div className="flex items-center gap-3 text-xs text-muted-foreground font-mono">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-muted-foreground font-mono">
+                  {currentChapterInfo?.date && (
+                    <>
+                      <span>{currentChapterInfo.date}</span>
+                      <span>•</span>
+                    </>
+                  )}
                   <span>第 {pageInfo.pageInChapter + 1} / {pageInfo.totalPagesInChapter} 页</span>
-                  <span>•</span>
-                  <span>篇目 {pageInfo.globalPage + 1} / {pageInfo.totalPages}</span>
+                  {book.chapters && book.chapters.length > 0 && (
+                    <>
+                      <span>•</span>
+                      <span>
+                        篇目 {currentChapterIndex >= 0 ? currentChapterIndex + 1 : 1} / {book.chapters.length}
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
 

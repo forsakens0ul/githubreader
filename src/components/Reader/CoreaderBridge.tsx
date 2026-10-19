@@ -57,6 +57,9 @@ export const CoreaderBridge: React.FC<CoreaderBridgeProps> = ({ book, onBackToSh
         author: `${book.owner}/${book.repo}`,
         type: 'txt',
         content: chapterText,
+        currentChapterTitle: targetChapter.title,
+        currentChapterId: targetChapter.filePath,
+        currentChapterDate: targetChapter.date,
         chapters: allChapters.map((ch, idx) => ({
           id: ch.filePath,
           title: ch.title,
